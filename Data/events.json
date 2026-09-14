@@ -1,0 +1,128 @@
+[
+  {
+    "Id": "31dddfd3c291424daf58180cd92cac43",
+    "Type": "Panel Login",
+    "Target": "admin",
+    "Details": "Login realizado",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:45:39.0919011+00:00"
+  },
+  {
+    "Id": "40ccd87150594098ae4e0cec8280fa7f",
+    "Type": "Alert Created",
+    "Target": "backup_stale",
+    "Details": "Nenhum backup encontrado.",
+    "Actor": "system",
+    "Ip": null,
+    "CreatedAt": "2026-09-11T01:45:57.4290225+00:00"
+  },
+  {
+    "Id": "1bc09259e4124cbd87d1898fbf472414",
+    "Type": "Settings Updated",
+    "Target": "server",
+    "Details": "Configura\u00E7\u00F5es atualizadas: North Auth",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:46:21.1241495+00:00"
+  },
+  {
+    "Id": "eeb82a95494a46529296b65621f80af1",
+    "Type": "YouTube Music API Diagnose",
+    "Target": "ok",
+    "Details": "Chave do YouTube validada com sucesso.",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:46:21.3469677+00:00"
+  },
+  {
+    "Id": "9e2a2887a3664535a41fcfe087a1aae3",
+    "Type": "Settings Updated",
+    "Target": "server",
+    "Details": "Configura\u00E7\u00F5es atualizadas: North Auth",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:46:25.2161706+00:00"
+  },
+  {
+    "Id": "7dd22d00f5f446a5906a7e687c35a2c4",
+    "Type": "YouTube Music Search",
+    "Target": "BAILE DA DISNEY - Rey Vaqueiro (BYD Sem Placa)",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:46:53.7319842+00:00"
+  },
+  {
+    "Id": "67076e196bef412ab68cf3402ce4f84c",
+    "Type": "YouTube Music Search",
+    "Target": "ME FALA QUAL NECESSIDADE - Henry Freitas (DVD Paralelos)",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:47:55.307363+00:00"
+  },
+  {
+    "Id": "5189bd5f03f548a3aa82897fbad394d8",
+    "Type": "YouTube Music Search",
+    "Target": "SELE\u00C7\u00C3O DE REGGAE FUNK REMIX  @igorproducer",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:48:13.7466951+00:00"
+  },
+  {
+    "Id": "35e409c094f749fcbb9a14daa5c87271",
+    "Type": "Panel Login",
+    "Target": "admin",
+    "Details": "Login realizado",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:51:26.3547702+00:00"
+  },
+  {
+    "Id": "c9135c517db04ff485a20802aa2c34ea",
+    "Type": "YouTube Music Search",
+    "Target": "SELE\u00C7\u00C3O DE REGGAE FUNK REMIX  @igorproducer",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:52:02.2277108+00:00"
+  },
+  {
+    "Id": "2d6de94bfa3949dfa0b9d0fc0b252a53",
+    "Type": "YouTube Music Search",
+    "Target": "SELE\u00C7\u00C3O DE REGGAE FUNK REMIX  @igorproducer",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:52:02.7184755+00:00"
+  },
+  {
+    "Id": "1418a593aff94a8495ed7403105aa4d0",
+    "Type": "Panel Login",
+    "Target": "admin",
+    "Details": "Login realizado",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:56:19.4821733+00:00"
+  },
+  {
+    "Id": "18b986045cbf4dbb8122a2756e1597b8",
+    "Type": "YouTube Music Search",
+    "Target": "SELE\u00C7\u00C3O DE REGGAE FUNK REMIX  @igorproducer",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:56:23.0118381+00:00"
+  },
+  {
+    "Id": "cecc97a8e0ce43329289b1df5e88fa37",
+    "Type": "YouTube Music Search",
+    "Target": "SELE\u00C7\u00C3O DE REGGAE FUNK REMIX  @igorproducer",
+    "Details": "Busca realizada no painel",
+    "Actor": "admin",
+    "Ip": "::1",
+    "CreatedAt": "2026-09-11T01:56:23.5441315+00:00"
+  }
+]

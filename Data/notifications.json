@@ -1,0 +1,14 @@
+[
+  {
+    "Id": "fb8a6779d0ae4db6bb7371346e9baca6",
+    "Title": "Backup atrasado",
+    "Message": "Nenhum backup encontrado.",
+    "Priority": "critical",
+    "CreatedBy": "system",
+    "CreatedAt": "2026-09-11T01:45:57.426426+00:00",
+    "UpdatedAt": null,
+    "Read": false,
+    "ReadAt": null,
+    "ReadBy": null
+  }
+]

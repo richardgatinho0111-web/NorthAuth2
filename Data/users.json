@@ -1,0 +1,34 @@
+[
+  {
+    "Username": "admin",
+    "DisplayName": "Administrador",
+    "PasswordHash": "2zpBRELm2fFaqJUQoTW/8MtYbOIMBIjEUldM92m6cb0=",
+    "Salt": "oXynVemUnn/hqYtKtaJasg==",
+    "Role": "Owner",
+    "Permissions": [
+      "dashboard",
+      "applications",
+      "licenses",
+      "users",
+      "logs",
+      "settings",
+      "sales",
+      "webhooks",
+      "events",
+      "subscriptions",
+      "files",
+      "variables",
+      "rules",
+      "tokens",
+      "chat",
+      "notifications",
+      "backups",
+      "monitoring",
+      "alerts"
+    ],
+    "Active": true,
+    "TwoFactorEnabled": false,
+    "TwoFactorSecret": null,
+    "CreatedAt": "2026-09-11T01:45:27.4009854+00:00"
+  }
+]

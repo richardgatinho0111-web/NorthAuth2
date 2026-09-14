@@ -1,0 +1,15 @@
+[
+  {
+    "Id": "1749e86d828048c58448a91794b43ab9",
+    "Key": "backup_stale",
+    "Severity": "critical",
+    "Title": "Backup atrasado",
+    "Message": "Nenhum backup encontrado.",
+    "Value": 17756857.948428202,
+    "Threshold": 48,
+    "Status": "active",
+    "CreatedAt": "2026-09-11T01:45:57.4232099+00:00",
+    "LastSeenAt": "2026-09-11T01:56:54.3454553+00:00",
+    "ResolvedAt": null
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "ServerName": "North Auth",
+  "SessionHours": 12,
+  "Maintenance": false,
+  "RegistrationEnabled": true,
+  "DefaultLicenseDays": 30,
+  "AuditRetention": 2000,
+  "BackupEnabled": true,
+  "BackupRetentionCount": 10,
+  "BackupIntervalHours": 24,
+  "CpuAlertPercent": 85,
+  "MemoryAlertMb": 1024,
+  "ErrorAlertCount": 10,
+  "BackupStaleHours": 48,
+  "LastAutomaticBackupAt": null,
+  "YouTubeApiKey": "AIzaSyCOfdJlo_cCwVRvc-Qcf-R46X88KVkSK2M"
+}

@@ -1,0 +1,42 @@
+NORTH AUTH — DEPLOY GRÁTIS NO RENDER
+====================================
+
+Requisitos
+- Conta em https://render.com (grátis, pode precisar GitHub)
+- Este pasta no GitHub OU upload Docker
+
+Opção A — Deploy com Docker no Render (recomendado)
+1. Crie um repositório no GitHub e envie TODOS os arquivos desta pasta
+   (Program.cs, NorthAuthServer.csproj, Dockerfile, Data/, appsettings.json, render.yaml)
+2. No Render: New + → Web Service → conecte o repo
+3. Runtime: Docker
+4. Plan: Free
+5. Create Web Service
+6. Espere o build. A URL fica tipo:
+   https://northauth-xxxx.onrender.com
+7. Teste:
+   https://SEU-SERVICO.onrender.com/api/health
+
+Opção B — Render Blueprint
+1. Suba a pasta no GitHub
+2. New + → Blueprint → selecione o repo (lê render.yaml)
+
+Depois do deploy
+- Abra a URL no navegador (painel web)
+- Login com o usuário que está em Data/users.json
+- Gere licenses no painel
+- No client do menu (North External), use a URL base:
+  https://SEU-SERVICO.onrender.com/
+  (ajuste o client se ele ainda apontar para keyauth.win)
+
+Avisos do plano free
+- O serviço DORME após ~15 min sem acesso (cold start 30–60s)
+- O disco do free NÃO é persistente pra sempre: backups importantes
+  baixe a pasta Data de vez em quando
+- Para produção séria, use plano pago ou VPS (Oracle free / Railway)
+
+API útil
+- GET  /api/health
+- POST /api/v1/license/login
+- POST /api/v1/license/register
+- Painel web na raiz /
