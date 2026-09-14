@@ -11,7 +11,5 @@ ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 ENV PORT=8080
 EXPOSE 8080
 COPY --from=build /app/publish .
-# Data folder must exist and be writable
 RUN mkdir -p /app/Data /app/Storage /app/Backups
-COPY Data/. /app/Data/
 ENTRYPOINT ["dotnet", "NorthAuthServer.dll"]
