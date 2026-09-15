@@ -5,11 +5,11 @@
     "Severity": "critical",
     "Title": "Backup atrasado",
     "Message": "Nenhum backup encontrado.",
-    "Value": 17756857.948428202,
+    "Value": 17756862.780772112,
     "Threshold": 48,
     "Status": "active",
     "CreatedAt": "2026-09-11T01:45:57.4232099+00:00",
-    "LastSeenAt": "2026-09-11T01:56:54.3454553+00:00",
+    "LastSeenAt": "2026-09-11T06:46:50.7945979+00:00",
     "ResolvedAt": null
   }
 ]

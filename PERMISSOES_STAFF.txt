@@ -1,0 +1,9 @@
+PERMISSÕES DE STAFF
+
+O Owner pode liberar separadamente:
+- Licenças / Keys: acesso à página de licenças.
+- Criar Keys: permite gerar/criar novas keys.
+- Resetar HWID: permite resetar o vínculo/HWID de uma licença.
+
+Um Staff novo não recebe Criar Keys nem Resetar HWID por padrão.
+As alterações de permissão continuam disponíveis somente para Owner.

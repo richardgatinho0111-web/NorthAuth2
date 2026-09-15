@@ -124,5 +124,14 @@
     "Actor": "admin",
     "Ip": "::1",
     "CreatedAt": "2026-09-11T01:56:23.5434803+00:00"
+  },
+  {
+    "Id": "7891d3dc0b5f4d6ea2fc9975b1c65a32",
+    "Action": "Panel Login",
+    "Target": "admin",
+    "Details": "Login realizado",
+    "Actor": "admin",
+    "Ip": "26.9.240.112",
+    "CreatedAt": "2026-09-11T06:24:21.3499445+00:00"
   }
 ]
