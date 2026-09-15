@@ -119,3 +119,23 @@ CONFIGURACAO RADMIN VPN — 30.1
 - O servidor precisa continuar aberto no PC que hospeda.
 - Os dois computadores precisam estar na mesma rede do Radmin VPN.
 - Nao e necessario trocar localhost nos scripts administrativos locais; eles continuam apontando para o proprio PC.
+
+NORTHAUTH - PERSISTENCIA RENDER
+================================
+Esta versão usa PostgreSQL como armazenamento persistente quando DATABASE_URL está configurada.
+
+NO RENDER:
+1. Crie/tenha um PostgreSQL persistente (Render Postgres ou provedor externo).
+2. No serviço northauth, adicione a variável de ambiente DATABASE_URL com a URL do banco.
+3. Faça o deploy desta versão.
+4. Na primeira inicialização, os arquivos Data/*.json presentes no projeto são importados somente
+   para tabelas que ainda não existem. Um deploy posterior NÃO sobrescreve os dados do banco.
+5. Depois disso, usuários, licenças, aplicações, planos, pedidos, logs, eventos e demais dados
+   continuam no PostgreSQL mesmo quando o serviço dorme ou reinicia.
+
+IMPORTANTE:
+- Não remova DATABASE_URL depois de começar a usar PostgreSQL.
+- Não use o filesystem do Render como banco de dados.
+- O endpoint /api/health/storage informa apenas o provedor de armazenamento, sem expor credenciais.
+- O armazenamento local continua disponível para dotnet run sem DATABASE_URL, mas é somente para
+  desenvolvimento; em produção, configure DATABASE_URL.

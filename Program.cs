@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.IO.Compression;
 using System.Diagnostics;
 using System.Net.Http.Json;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWindowsService();
@@ -36,40 +37,48 @@ Directory.CreateDirectory(filesDir);
 var apiKey = builder.Configuration["NorthAuth:ApiKey"] ?? "CHANGE_THIS_API_KEY";
 var jsonOptions = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
 
-List<LicenseRecord> LoadLicenses() => LoadFile<List<LicenseRecord>>(licensesFile) ?? new();
-List<AppRecord> LoadApps() => LoadFile<List<AppRecord>>(appsFile) ?? new();
-List<PanelUser> LoadUsers() => LoadFile<List<PanelUser>>(usersFile) ?? new();
-List<AuditLog> LoadLogs() => LoadFile<List<AuditLog>>(logsFile) ?? new();
-List<PlanRecord> LoadPlans() => LoadFile<List<PlanRecord>>(plansFile) ?? new();
-List<OrderRecord> LoadOrders() => LoadFile<List<OrderRecord>>(ordersFile) ?? new();
-List<WebhookRecord> LoadWebhooks() => LoadFile<List<WebhookRecord>>(webhooksFile) ?? new();
-List<EventRecord> LoadEvents() => LoadFile<List<EventRecord>>(eventsFile) ?? new();
-List<SubscriptionRecord> LoadSubscriptions() => LoadFile<List<SubscriptionRecord>>(subscriptionsFile) ?? new();
-List<VariableRecord> LoadVariables() => LoadFile<List<VariableRecord>>(variablesFile) ?? new();
-List<RuleRecord> LoadRules() => LoadFile<List<RuleRecord>>(rulesFile) ?? new();
-List<TokenRecord> LoadTokens() => LoadFile<List<TokenRecord>>(tokensFile) ?? new();
-List<ChatMessageRecord> LoadChatMessages() => LoadFile<List<ChatMessageRecord>>(chatMessagesFile) ?? new();
-List<NotificationRecord> LoadNotifications() => LoadFile<List<NotificationRecord>>(notificationsFile) ?? new();
-ServerSettings LoadSettings() => LoadFile<ServerSettings>(settingsFile) ?? new();
-List<AlertRecord> LoadAlerts() => LoadFile<List<AlertRecord>>(alertsFile) ?? new();
-void SaveAlerts(List<AlertRecord> x) => SaveFile(alertsFile, x);
-void SaveSettings(ServerSettings x) => SaveFile(settingsFile, x);
-void SaveFile<T>(string file, T value) => File.WriteAllText(file, JsonSerializer.Serialize(value, jsonOptions));
-void SavePlans(List<PlanRecord> x) => SaveFile(plansFile, x);
-void SaveOrders(List<OrderRecord> x) => SaveFile(ordersFile, x);
-void SaveWebhooks(List<WebhookRecord> x) => SaveFile(webhooksFile, x);
-void SaveEvents(List<EventRecord> x) => SaveFile(eventsFile, x);
-void SaveSubscriptions(List<SubscriptionRecord> x) => SaveFile(subscriptionsFile, x);
-void SaveVariables(List<VariableRecord> x) => SaveFile(variablesFile, x);
-void SaveRules(List<RuleRecord> x) => SaveFile(rulesFile, x);
-void SaveTokens(List<TokenRecord> x) => SaveFile(tokensFile, x);
-void SaveChatMessages(List<ChatMessageRecord> x) => SaveFile(chatMessagesFile, x);
-void SaveNotifications(List<NotificationRecord> x) => SaveFile(notificationsFile, x);
-T? LoadFile<T>(string file) { try { return File.Exists(file) ? JsonSerializer.Deserialize<T>(File.ReadAllText(file), jsonOptions) : default; } catch { return default; } }
-void SaveLicenses(List<LicenseRecord> items) => File.WriteAllText(licensesFile, JsonSerializer.Serialize(items, jsonOptions));
-void SaveApps(List<AppRecord> items) => File.WriteAllText(appsFile, JsonSerializer.Serialize(items, jsonOptions));
-void SaveUsers(List<PanelUser> items) => File.WriteAllText(usersFile, JsonSerializer.Serialize(items, jsonOptions));
-void SaveLogs(List<AuditLog> items) => File.WriteAllText(logsFile, JsonSerializer.Serialize(items, jsonOptions));
+// NorthAuth 2.0 persistence: JSON files are kept as a local mirror/backup,
+// but the authoritative data store is PostgreSQL when DATABASE_URL is present.
+// This prevents users/licenses from disappearing when Render recreates the container.
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("NorthAuth");
+var requirePersistentStorage = string.Equals(Environment.GetEnvironmentVariable("NORTHAUTH_REQUIRE_PERSISTENCE"), "1", StringComparison.Ordinal);
+if (requirePersistentStorage && string.IsNullOrWhiteSpace(databaseUrl))
+    throw new InvalidOperationException("NorthAuth requer DATABASE_URL em produção para evitar perda de usuários e licenças.");
+var store = new PersistentJsonStore(databaseUrl, dataDir, jsonOptions);
+store.Initialize();
+
+List<LicenseRecord> LoadLicenses() => store.Load("licenses", licensesFile, new List<LicenseRecord>());
+List<AppRecord> LoadApps() => store.Load("apps", appsFile, new List<AppRecord>());
+List<PanelUser> LoadUsers() => store.Load("users", usersFile, new List<PanelUser>());
+List<AuditLog> LoadLogs() => store.Load("logs", logsFile, new List<AuditLog>());
+List<PlanRecord> LoadPlans() => store.Load("plans", plansFile, new List<PlanRecord>());
+List<OrderRecord> LoadOrders() => store.Load("orders", ordersFile, new List<OrderRecord>());
+List<WebhookRecord> LoadWebhooks() => store.Load("webhooks", webhooksFile, new List<WebhookRecord>());
+List<EventRecord> LoadEvents() => store.Load("events", eventsFile, new List<EventRecord>());
+List<SubscriptionRecord> LoadSubscriptions() => store.Load("subscriptions", subscriptionsFile, new List<SubscriptionRecord>());
+List<VariableRecord> LoadVariables() => store.Load("variables", variablesFile, new List<VariableRecord>());
+List<RuleRecord> LoadRules() => store.Load("rules", rulesFile, new List<RuleRecord>());
+List<TokenRecord> LoadTokens() => store.Load("tokens", tokensFile, new List<TokenRecord>());
+List<ChatMessageRecord> LoadChatMessages() => store.Load("chat_messages", chatMessagesFile, new List<ChatMessageRecord>());
+List<NotificationRecord> LoadNotifications() => store.Load("notifications", notificationsFile, new List<NotificationRecord>());
+ServerSettings LoadSettings() => store.Load("settings", settingsFile, new ServerSettings());
+List<AlertRecord> LoadAlerts() => store.Load("alerts", alertsFile, new List<AlertRecord>());
+void SaveAlerts(List<AlertRecord> x) => store.Save("alerts", alertsFile, x);
+void SaveSettings(ServerSettings x) => store.Save("settings", settingsFile, x);
+void SavePlans(List<PlanRecord> x) => store.Save("plans", plansFile, x);
+void SaveOrders(List<OrderRecord> x) => store.Save("orders", ordersFile, x);
+void SaveWebhooks(List<WebhookRecord> x) => store.Save("webhooks", webhooksFile, x);
+void SaveEvents(List<EventRecord> x) => store.Save("events", eventsFile, x);
+void SaveSubscriptions(List<SubscriptionRecord> x) => store.Save("subscriptions", subscriptionsFile, x);
+void SaveVariables(List<VariableRecord> x) => store.Save("variables", variablesFile, x);
+void SaveRules(List<RuleRecord> x) => store.Save("rules", rulesFile, x);
+void SaveTokens(List<TokenRecord> x) => store.Save("tokens", tokensFile, x);
+void SaveChatMessages(List<ChatMessageRecord> x) => store.Save("chat_messages", chatMessagesFile, x);
+void SaveNotifications(List<NotificationRecord> x) => store.Save("notifications", notificationsFile, x);
+void SaveLicenses(List<LicenseRecord> items) => store.Save("licenses", licensesFile, items);
+void SaveApps(List<AppRecord> items) => store.Save("apps", appsFile, items);
+void SaveUsers(List<PanelUser> items) => store.Save("users", usersFile, items);
+void SaveLogs(List<AuditLog> items) => store.Save("logs", logsFile, items);
 
 // Garante que o painel sempre tenha uma aplicação inicial cadastrada.
 // Só cria a aplicação automaticamente quando o arquivo está vazio; aplicações
@@ -1656,7 +1665,175 @@ static async Task<List<object>> SearchYouTubeWebAsync(string query)
     return results;
 }
 
+// Persistence diagnostics: never exposes secrets or database credentials.
+app.MapGet("/api/health/storage", () => Results.Ok(new {
+    success = true,
+    provider = store.ProviderName,
+    persistent = store.IsPersistent,
+    message = store.IsPersistent ? "PostgreSQL persistente ativo." : "Armazenamento local ativo apenas para desenvolvimento. Configure DATABASE_URL no Render."
+}));
+
 app.Run();
+
+// Armazenamento persistente do NorthAuth.
+// Em produção (Render), DATABASE_URL aponta para PostgreSQL. O banco é a fonte de verdade;
+// os arquivos JSON locais servem como espelho para backups e desenvolvimento.
+public sealed class PersistentJsonStore
+{
+    private readonly string? _connectionString;
+    private readonly string _dataDir;
+    private readonly JsonSerializerOptions _options;
+    private readonly object _sync = new();
+    private bool _initialized;
+    private static readonly Dictionary<string,string> Keys = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["licenses"]="licenses.json", ["apps"]="apps.json", ["users"]="users.json", ["logs"]="logs.json",
+        ["plans"]="plans.json", ["orders"]="orders.json", ["webhooks"]="webhooks.json", ["events"]="events.json",
+        ["subscriptions"]="subscriptions.json", ["variables"]="variables.json", ["rules"]="rules.json",
+        ["tokens"]="tokens.json", ["chat_messages"]="chat_messages.json", ["notifications"]="notifications.json",
+        ["settings"]="settings.json", ["alerts"]="alerts.json"
+    };
+
+    public bool IsPersistent => !string.IsNullOrWhiteSpace(_connectionString);
+    public string ProviderName => IsPersistent ? "PostgreSQL" : "Local JSON (development only)";
+
+    public PersistentJsonStore(string? databaseUrl, string dataDir, JsonSerializerOptions options)
+    {
+        _connectionString = NormalizeConnectionString(databaseUrl);
+        _dataDir = dataDir;
+        _options = options;
+    }
+
+    public void Initialize()
+    {
+        lock (_sync)
+        {
+            if (_initialized) return;
+            if (!IsPersistent)
+            {
+                // Local development is supported, but Render deployments must set DATABASE_URL.
+                _initialized = true;
+                return;
+            }
+
+            using var cn = new NpgsqlConnection(_connectionString);
+            cn.Open();
+            using (var cmd = cn.CreateCommand())
+            {
+                cmd.CommandText = """
+                    CREATE TABLE IF NOT EXISTS northauth_json_store (
+                        key TEXT PRIMARY KEY,
+                        json JSONB NOT NULL,
+                        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                    );
+                    """;
+                cmd.ExecuteNonQuery();
+            }
+
+            // One-time import: if a dataset is absent in PostgreSQL, import the JSON shipped with the app.
+            // Existing database values are NEVER overwritten by a deploy/restart.
+            foreach (var pair in Keys)
+            {
+                using var exists = cn.CreateCommand();
+                exists.CommandText = "SELECT 1 FROM northauth_json_store WHERE key=@key LIMIT 1";
+                exists.Parameters.AddWithValue("key", pair.Key);
+                if (exists.ExecuteScalar() is not null) continue;
+
+                var path = Path.Combine(_dataDir, pair.Value);
+                var json = File.Exists(path) ? File.ReadAllText(path) : (pair.Key == "settings" ? "{}" : "[]");
+                if (string.IsNullOrWhiteSpace(json)) json = pair.Key == "settings" ? "{}" : "[]";
+                using var insert = cn.CreateCommand();
+                insert.CommandText = "INSERT INTO northauth_json_store(key,json,updated_at) VALUES(@key,CAST(@json AS jsonb),NOW()) ON CONFLICT(key) DO NOTHING";
+                insert.Parameters.AddWithValue("key", pair.Key);
+                insert.Parameters.AddWithValue("json", json);
+                insert.ExecuteNonQuery();
+            }
+
+            // Refresh the local mirror from the database after every container start.
+            foreach (var pair in Keys)
+            {
+                using var read = cn.CreateCommand();
+                read.CommandText = "SELECT json::text FROM northauth_json_store WHERE key=@key";
+                read.Parameters.AddWithValue("key", pair.Key);
+                var json = read.ExecuteScalar()?.ToString();
+                if (json is null) continue;
+                File.WriteAllText(Path.Combine(_dataDir, pair.Value), json);
+            }
+            _initialized = true;
+        }
+    }
+
+    public T Load<T>(string key, string mirrorFile, T fallback)
+    {
+        lock (_sync)
+        {
+            if (!IsPersistent)
+            {
+                try { return File.Exists(mirrorFile) ? JsonSerializer.Deserialize<T>(File.ReadAllText(mirrorFile), _options) ?? fallback : fallback; }
+                catch { return fallback; }
+            }
+
+            using var cn = new NpgsqlConnection(_connectionString);
+            cn.Open();
+            using var cmd = cn.CreateCommand();
+            cmd.CommandText = "SELECT json::text FROM northauth_json_store WHERE key=@key";
+            cmd.Parameters.AddWithValue("key", key);
+            var json = cmd.ExecuteScalar()?.ToString();
+            if (json is null) throw new InvalidOperationException($"Persistent dataset '{key}' is missing from PostgreSQL.");
+            var value = JsonSerializer.Deserialize<T>(json, _options) ?? fallback;
+            File.WriteAllText(mirrorFile, json);
+            return value;
+        }
+    }
+
+    public void Save<T>(string key, string mirrorFile, T value)
+    {
+        var json = JsonSerializer.Serialize(value, _options);
+        lock (_sync)
+        {
+            if (!IsPersistent)
+            {
+                File.WriteAllText(mirrorFile, json);
+                return;
+            }
+            using var cn = new NpgsqlConnection(_connectionString);
+            cn.Open();
+            using var cmd = cn.CreateCommand();
+            cmd.CommandText = "INSERT INTO northauth_json_store(key,json,updated_at) VALUES(@key,CAST(@json AS jsonb),NOW()) ON CONFLICT(key) DO UPDATE SET json=EXCLUDED.json, updated_at=NOW()";
+            cmd.Parameters.AddWithValue("key", key);
+            cmd.Parameters.AddWithValue("json", json);
+            cmd.ExecuteNonQuery();
+            File.WriteAllText(mirrorFile, json);
+        }
+    }
+
+    private static string? NormalizeConnectionString(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        var raw = value.Trim();
+        if (!raw.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) && !raw.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase)) return raw;
+        var uri = new Uri(raw);
+        var userInfo = Uri.UnescapeDataString(uri.UserInfo);
+        var colon = userInfo.IndexOf(':');
+        var user = colon >= 0 ? userInfo[..colon] : userInfo;
+        var password = colon >= 0 ? userInfo[(colon + 1)..] : "";
+        var database = uri.AbsolutePath.TrimStart('/');
+        var builder = new NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.Port > 0 ? uri.Port : 5432,
+            Username = user,
+            Password = password,
+            Database = Uri.UnescapeDataString(database),
+            SslMode = SslMode.Require,
+            TrustServerCertificate = true,
+            Timeout = 15,
+            CommandTimeout = 30,
+            ApplicationName = "NorthAuth"
+        };
+        return builder.ConnectionString;
+    }
+}
 
 // Declarações de tipos devem ficar fora das instruções de nível superior.
 

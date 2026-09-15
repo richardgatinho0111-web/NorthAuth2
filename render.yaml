@@ -11,3 +11,7 @@ services:
         value: http://0.0.0.0:8080
       - key: NorthAuth__ApiKey
         sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: NORTHAUTH_REQUIRE_PERSISTENCE
+        value: "1"
