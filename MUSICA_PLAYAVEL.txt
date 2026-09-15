@@ -1,0 +1,6 @@
+Correção da Música:
+- pesquisa até 10 vídeos;
+- exige videoEmbeddable=true e videoSyndicated=true;
+- valida status.embeddable/privacyStatus;
+- verifica restrição regional e prioriza vídeos disponíveis no Brasil;
+- escolhe automaticamente o primeiro candidato validado.

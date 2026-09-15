@@ -1,0 +1,1 @@
+Pesquisa YouTube corrigida: usa API oficial quando disponível e fallback robusto para IDs da página pública do YouTube. Se a API estiver sem chave, inválida ou sem cota, a busca pública é tentada automaticamente.

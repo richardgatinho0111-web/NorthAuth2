@@ -1,0 +1,8 @@
+Pesquisa YouTube corrigida:
+- removida a resposta parcial (fields), usando resposta padrão da YouTube Data API v3;
+- busca limitada a vídeos e prioriza Brasil/português;
+- erros da API agora aparecem na interface com a mensagem do Google.
+
+Se aparecer keyInvalid, accessNotConfigured, quotaExceeded ou ipRefererBlocked,
+a correção é na configuração da chave no Google Cloud (YouTube Data API v3).
+Para uso no servidor, evite restrição HTTP referrer na chave.

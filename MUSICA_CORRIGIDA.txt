@@ -1,0 +1,13 @@
+MÚSICA - PESQUISA CORRIGIDA
+
+A pesquisa agora tenta a YouTube Data API v3 quando houver chave configurada.
+Se a chave estiver ausente, inválida, restrita, sem cota ou a API retornar zero resultados,
+o servidor tenta automaticamente a pesquisa pública do YouTube.
+
+Não é necessário colocar uma chave para usar o fallback.
+A reprodução continua usando o player oficial incorporado do YouTube.
+
+IMPORTANTE:
+- Se você usa uma chave da Google/YouTube, configure-a em Configurações.
+- Nunca compartilhe uma chave de API publicamente.
+- A chave que estava gravada no pacote anterior foi removida deste ZIP.

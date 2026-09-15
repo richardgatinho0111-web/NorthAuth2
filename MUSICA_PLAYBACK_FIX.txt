@@ -1,0 +1,1 @@
+Player ajustado para aguardar o iframe, reenviar o comando de reprodução e oferecer abertura direta no YouTube como fallback.

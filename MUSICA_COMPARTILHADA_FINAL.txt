@@ -1,0 +1,18 @@
+MÚSICA COMPARTILHADA - FINAL
+
+Quando um usuário seleciona uma música, o servidor registra a seleção atual.
+Todos os clientes conectados consultam esse estado automaticamente e carregam
+o mesmo vídeo no player.
+
+Play/seleção:
+- usuário A escolhe a música;
+- servidor grava o vídeo;
+- usuários B, C etc. recebem a seleção em até ~1,2 s.
+
+Parar:
+- o botão Parar limpa a música compartilhada.
+
+Limitação do navegador:
+o servidor não redistribui o áudio. Cada cliente usa o player oficial do YouTube.
+Navegadores podem bloquear autoplay/áudio até o usuário interagir com a página.
+Assim, cada cliente pode precisar clicar uma vez em Reproduzir/Ativar áudio.

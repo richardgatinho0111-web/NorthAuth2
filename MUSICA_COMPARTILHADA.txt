@@ -1,0 +1,8 @@
+MÚSICA COMPARTILHADA
+
+A seleção de música agora é compartilhada pelo servidor.
+Clientes conectados ao mesmo North Auth recebem a música selecionada.
+
+Observação: a reprodução efetiva depende do player oficial do YouTube e das
+restrições de incorporação/autoplay do vídeo. Cada navegador precisa permitir
+a reprodução; o servidor não baixa nem redistribui o áudio.

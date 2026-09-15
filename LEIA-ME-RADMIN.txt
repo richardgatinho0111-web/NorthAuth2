@@ -1,0 +1,19 @@
+NORTHKEYAUTH - WINDOWS SERVICE + RADMIN VPN
+
+O instalador agora transforma o NorthAuthServer em um Windows Service de verdade.
+
+1. Execute INSTALAR_SERVICO_RADMIN.bat como Administrador.
+2. Ele publica o projeto, configura 0.0.0.0:5000, libera TCP 5000 no Firewall,
+   cria o servico NorthAuthServer e inicia o servidor.
+3. Depois, nao e necessario manter CMD/PowerShell aberto.
+4. O servico inicia automaticamente com o Windows.
+5. Radmin VPN precisa estar conectado.
+6. O amigo usa http://SEU-IP-RADMIN:5000
+
+O instalador requer o SDK/runtime .NET 8 instalado para publicar o projeto.
+Se o comando dotnet publish falhar, execute o instalador novamente após instalar
+o .NET 8 SDK.
+
+STATUS_SERVICO_RADMIN.bat = verificar status
+REMOVER_SERVICO_RADMIN.bat = remover serviço e regra de Firewall
+TESTAR_RADMIN.bat = teste manual visível, útil para diagnóstico
